@@ -113,9 +113,11 @@ public class MetaData extends Task {
         throw new IllegalAccessError("MetaData:setContentByLocalJSON should not be called");
     }
 
+
     /**
      * 重写父类的getLocalJSONFromContent方法
      * 从元数据内容中获取本地json对象，抛出异常
+     * @return JSONObject
      */
     @Override
     public JSONObject getLocalJSONFromContent() {
@@ -126,6 +128,7 @@ public class MetaData extends Task {
      * 重写父类的getSyncAction方法
      * 获取同步动作状态，一般不会用到，若用到，则抛出异常
      * @param c Cursor
+     * @return int
      */
     @Override
     public int getSyncAction(Cursor c) {
