@@ -149,8 +149,9 @@ public class SqlNote {
         mIsCreate = false;
         loadFromCursor(c);
         mDataList = new ArrayList<SqlData>();
-        if (mType == Notes.TYPE_NOTE)
+        if (mType == Notes.TYPE_NOTE) {
             loadDataContent();
+        }
         mDiffNoteValues = new ContentValues();
     }
 
@@ -160,8 +161,9 @@ public class SqlNote {
         mIsCreate = false;
         loadFromCursor(id);
         mDataList = new ArrayList<SqlData>();
-        if (mType == Notes.TYPE_NOTE)
+        if (mType == Notes.TYPE_NOTE) {
             loadDataContent();
+        }
         mDiffNoteValues = new ContentValues();
 
     }
@@ -180,8 +182,9 @@ public class SqlNote {
                 Log.w(TAG, "loadFromCursor: cursor = null");
             }
         } finally {
-            if (c != null)
+            if (c != null) {
                 c.close();
+            }
         }
     }
 
@@ -221,8 +224,9 @@ public class SqlNote {
                 Log.w(TAG, "loadDataContent: cursor = null");
             }
         } finally {
-            if (c != null)
+            if (c != null) {
                 c.close();
+            }
         }
     }
 
@@ -496,8 +500,9 @@ public class SqlNote {
 
         // refresh local info
         loadFromCursor(mId);
-        if (mType == Notes.TYPE_NOTE)
+        if (mType == Notes.TYPE_NOTE) {
             loadDataContent();
+        }
 
         mDiffNoteValues.clear();
         mIsCreate = false;

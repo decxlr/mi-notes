@@ -45,6 +45,7 @@ public class GTaskSyncService extends Service {
     private void startSync() {
         if (mSyncTask == null) {
             mSyncTask = new GTaskASyncTask(this, new GTaskASyncTask.OnCompleteListener() {
+                @Override
                 public void onComplete() {
                     mSyncTask = null;
                     sendBroadcast("");

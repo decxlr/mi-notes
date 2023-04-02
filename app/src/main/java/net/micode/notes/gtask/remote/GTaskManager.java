@@ -169,8 +169,9 @@ public class GTaskManager {
     }
 
     private void initGTaskList() throws NetworkFailureException {
-        if (mCancelled)
+        if (mCancelled) {
             return;
+        }
         GTaskClient client = GTaskClient.getInstance();
         try {
             JSONArray jsTaskLists = client.getTaskLists();
@@ -375,8 +376,9 @@ public class GTaskManager {
                     mNidToGid.put((long) Notes.ID_ROOT_FOLDER, gid);
                     // for system folder, only update remote name if necessary
                     if (!node.getName().equals(
-                            GTaskStringUtils.MIUI_FOLDER_PREFFIX + GTaskStringUtils.FOLDER_DEFAULT))
+                            GTaskStringUtils.MIUI_FOLDER_PREFFIX + GTaskStringUtils.FOLDER_DEFAULT)) {
                         doContentSync(Node.SYNC_ACTION_UPDATE_REMOTE, node, c);
+                    }
                 } else {
                     doContentSync(Node.SYNC_ACTION_ADD_REMOTE, node, c);
                 }
@@ -408,8 +410,9 @@ public class GTaskManager {
                         // necessary
                         if (!node.getName().equals(
                                 GTaskStringUtils.MIUI_FOLDER_PREFFIX
-                                        + GTaskStringUtils.FOLDER_CALL_NOTE))
+                                        + GTaskStringUtils.FOLDER_CALL_NOTE)) {
                             doContentSync(Node.SYNC_ACTION_UPDATE_REMOTE, node, c);
+                        }
                     } else {
                         doContentSync(Node.SYNC_ACTION_ADD_REMOTE, node, c);
                     }
@@ -472,8 +475,9 @@ public class GTaskManager {
             }
         }
 
-        if (!mCancelled)
+        if (!mCancelled) {
             GTaskClient.getInstance().commitUpdate();
+        }
     }
 
     private void doContentSync(int syncType, Node node, Cursor c) throws NetworkFailureException {
@@ -649,12 +653,13 @@ public class GTaskManager {
 
             // we need to skip folder if it has already existed
             String folderName = GTaskStringUtils.MIUI_FOLDER_PREFFIX;
-            if (sqlNote.getId() == Notes.ID_ROOT_FOLDER)
+            if (sqlNote.getId() == Notes.ID_ROOT_FOLDER) {
                 folderName += GTaskStringUtils.FOLDER_DEFAULT;
-            else if (sqlNote.getId() == Notes.ID_CALL_RECORD_FOLDER)
+            } else if (sqlNote.getId() == Notes.ID_CALL_RECORD_FOLDER) {
                 folderName += GTaskStringUtils.FOLDER_CALL_NOTE;
-            else
+            } else {
                 folderName += sqlNote.getSnippet();
+            }
 
             Iterator<Map.Entry<String, TaskList>> iter = mGTaskListHashMap.entrySet().iterator();
             while (iter.hasNext()) {

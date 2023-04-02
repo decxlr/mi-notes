@@ -43,6 +43,7 @@ public class TaskList extends Node {
         mIndex = 1;
     }
 
+    @Override
     public JSONObject getCreateAction(int actionId) {
         JSONObject js = new JSONObject();
 
@@ -74,6 +75,7 @@ public class TaskList extends Node {
         return js;
     }
 
+    @Override
     public JSONObject getUpdateAction(int actionId) {
         JSONObject js = new JSONObject();
 
@@ -103,6 +105,7 @@ public class TaskList extends Node {
         return js;
     }
 
+    @Override
     public void setContentByRemoteJSON(JSONObject js) {
         if (js != null) {
             try {
@@ -129,6 +132,7 @@ public class TaskList extends Node {
         }
     }
 
+    @Override
     public void setContentByLocalJSON(JSONObject js) {
         if (js == null || !js.has(GTaskStringUtils.META_HEAD_NOTE)) {
             Log.w(TAG, "setContentByLocalJSON: nothing is avaiable");
@@ -141,13 +145,14 @@ public class TaskList extends Node {
                 String name = folder.getString(NoteColumns.SNIPPET);
                 setName(GTaskStringUtils.MIUI_FOLDER_PREFFIX + name);
             } else if (folder.getInt(NoteColumns.TYPE) == Notes.TYPE_SYSTEM) {
-                if (folder.getLong(NoteColumns.ID) == Notes.ID_ROOT_FOLDER)
+                if (folder.getLong(NoteColumns.ID) == Notes.ID_ROOT_FOLDER) {
                     setName(GTaskStringUtils.MIUI_FOLDER_PREFFIX + GTaskStringUtils.FOLDER_DEFAULT);
-                else if (folder.getLong(NoteColumns.ID) == Notes.ID_CALL_RECORD_FOLDER)
+                } else if (folder.getLong(NoteColumns.ID) == Notes.ID_CALL_RECORD_FOLDER) {
                     setName(GTaskStringUtils.MIUI_FOLDER_PREFFIX
                             + GTaskStringUtils.FOLDER_CALL_NOTE);
-                else
+                } else {
                     Log.e(TAG, "invalid system folder");
+                }
             } else {
                 Log.e(TAG, "error type");
             }
@@ -157,21 +162,24 @@ public class TaskList extends Node {
         }
     }
 
+    @Override
     public JSONObject getLocalJSONFromContent() {
         try {
             JSONObject js = new JSONObject();
             JSONObject folder = new JSONObject();
 
             String folderName = getName();
-            if (getName().startsWith(GTaskStringUtils.MIUI_FOLDER_PREFFIX))
+            if (getName().startsWith(GTaskStringUtils.MIUI_FOLDER_PREFFIX)) {
                 folderName = folderName.substring(GTaskStringUtils.MIUI_FOLDER_PREFFIX.length(),
                         folderName.length());
+            }
             folder.put(NoteColumns.SNIPPET, folderName);
             if (folderName.equals(GTaskStringUtils.FOLDER_DEFAULT)
-                    || folderName.equals(GTaskStringUtils.FOLDER_CALL_NOTE))
+                    || folderName.equals(GTaskStringUtils.FOLDER_CALL_NOTE)) {
                 folder.put(NoteColumns.TYPE, Notes.TYPE_SYSTEM);
-            else
+            } else {
                 folder.put(NoteColumns.TYPE, Notes.TYPE_FOLDER);
+            }
 
             js.put(GTaskStringUtils.META_HEAD_NOTE, folder);
 
@@ -183,6 +191,7 @@ public class TaskList extends Node {
         }
     }
 
+    @Override
     public int getSyncAction(Cursor c) {
         try {
             if (c.getInt(SqlNote.LOCAL_MODIFIED_COLUMN) == 0) {
@@ -247,14 +256,17 @@ public class TaskList extends Node {
             // update the task list
             Task preTask = null;
             Task afterTask = null;
-            if (index != 0)
+            if (index != 0) {
                 preTask = mChildren.get(index - 1);
-            if (index != mChildren.size() - 1)
+            }
+            if (index != mChildren.size() - 1) {
                 afterTask = mChildren.get(index + 1);
+            }
 
             task.setPriorSibling(preTask);
-            if (afterTask != null)
+            if (afterTask != null) {
                 afterTask.setPriorSibling(task);
+            }
         }
 
         return true;
@@ -294,8 +306,9 @@ public class TaskList extends Node {
             return false;
         }
 
-        if (pos == index)
+        if (pos == index) {
             return true;
+        }
         return (removeChildTask(task) && addChildTask(task, index));
     }
 
@@ -323,8 +336,9 @@ public class TaskList extends Node {
 
     public Task getChilTaskByGid(String gid) {
         for (Task task : mChildren) {
-            if (task.getGid().equals(gid))
+            if (task.getGid().equals(gid)) {
                 return task;
+            }
         }
         return null;
     }

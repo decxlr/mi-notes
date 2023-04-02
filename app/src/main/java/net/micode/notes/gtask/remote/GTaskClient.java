@@ -441,8 +441,9 @@ public class GTaskClient {
                 commitUpdate();
             }
 
-            if (mUpdateArray == null)
+            if (mUpdateArray == null) {
                 mUpdateArray = new JSONArray();
+            }
             mUpdateArray.put(node.getUpdateAction(getActionId()));
         }
     }

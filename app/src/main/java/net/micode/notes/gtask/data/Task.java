@@ -54,6 +54,7 @@ public class Task extends Node {
         mMetaInfo = null;
     }
 
+    @Override
     public JSONObject getCreateAction(int actionId) {
         JSONObject js = new JSONObject();
 
@@ -103,6 +104,7 @@ public class Task extends Node {
         return js;
     }
 
+    @Override
     public JSONObject getUpdateAction(int actionId) {
         JSONObject js = new JSONObject();
 
@@ -135,6 +137,7 @@ public class Task extends Node {
         return js;
     }
 
+    @Override
     public void setContentByRemoteJSON(JSONObject js) {
         if (js != null) {
             try {
@@ -175,6 +178,7 @@ public class Task extends Node {
         }
     }
 
+    @Override
     public void setContentByLocalJSON(JSONObject js) {
         if (js == null || !js.has(GTaskStringUtils.META_HEAD_NOTE)
                 || !js.has(GTaskStringUtils.META_HEAD_DATA)) {
@@ -204,6 +208,7 @@ public class Task extends Node {
         }
     }
 
+    @Override
     public JSONObject getLocalJSONFromContent() {
         String name = getName();
         try {
@@ -258,6 +263,7 @@ public class Task extends Node {
         }
     }
 
+    @Override
     public int getSyncAction(Cursor c) {
         try {
             JSONObject noteInfo = null;
