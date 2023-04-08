@@ -27,6 +27,7 @@ import net.micode.notes.data.Notes.DataConstants;
 import net.micode.notes.data.Notes.NoteColumns;
 
 
+//用于存储Notes的数据，以及根据数据更改Notes结构体的变量
 public class NotesDatabaseHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "note.db";
 

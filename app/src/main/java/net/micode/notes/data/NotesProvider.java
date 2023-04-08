@@ -35,6 +35,15 @@ import net.micode.notes.data.Notes.NoteColumns;
 import net.micode.notes.data.NotesDatabaseHelper.TABLE;
 
 
+/**
+ * 为存储和获取数据提供接口。可以在不同的应用程序之间共享数据
+ * ContentProvider提供的方法
+ * query：查询
+ * insert：插入
+ * update：更新
+ * delete：删除
+ * getType：得到数据类型
+ */
 public class NotesProvider extends ContentProvider {
     private static final UriMatcher mMatcher;
 

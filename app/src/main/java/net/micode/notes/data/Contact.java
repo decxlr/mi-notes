@@ -25,7 +25,10 @@ import android.util.Log;
 
 import java.util.HashMap;
 
+// 本文件处理联系人相关信息
 public class Contact {
+    // 通过两种方式访问联系人1.去数据库中2.去cache中，如果数据库中读了，将它存入cache中，和主存缓存机制类似
+    // 与手机联系人有关，但实际代码中并没有调用过此类
     private static HashMap<String, String> sContactCache;
     private static final String TAG = "Contact";
 
@@ -36,6 +39,12 @@ public class Contact {
             + " FROM phone_lookup"
             + " WHERE min_match = '+')";
 
+    /***
+     *  获取联系人
+     * @param context 提供的提示信息
+     * @param phoneNumber 联系人的电话号码
+     * @return 返回联系人的名字
+     */
     public static String getContact(Context context, String phoneNumber) {
         if(sContactCache == null) {
             sContactCache = new HashMap<String, String>();
@@ -69,5 +78,6 @@ public class Contact {
             Log.d(TAG, "No contact matched with number:" + phoneNumber);
             return null;
         }
+
     }
 }

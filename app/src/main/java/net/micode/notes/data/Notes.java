@@ -17,6 +17,13 @@
 package net.micode.notes.data;
 
 import android.net.Uri;
+
+/*
+本文件实现便签的数据库
+实现了对便签的相关属性包括：Anthority, Tag，以及数据，联系人的信息进行保存管理，实现了对若干属性的定义
+并定义了DataColumns，DataColumns接口，可用于其余类的实现
+在便签管理中实现TextNote,CallNote两个类，用于对便签内容的保存。
+ */
 public class Notes {
     public static final String AUTHORITY = "micode_notes";
     public static final String TAG = "Notes";
@@ -46,6 +53,10 @@ public class Notes {
     public static final int TYPE_WIDGET_2X            = 0;
     public static final int TYPE_WIDGET_4X            = 1;
 
+    /*
+    定义一个接口类，这里是由若干属性（string）组织成的集合，在之后的NotesDatabaseHelper数据库创建、查询、修改中使用，
+    这里储存的就是关于便签属性的信息，比如创建时间、修改时间、提醒时间等信息。
+     */
     public static class DataConstants {
         public static final String NOTE = TextNote.CONTENT_ITEM_TYPE;
         public static final String CALL_NOTE = CallNote.CONTENT_ITEM_TYPE;
@@ -61,6 +72,9 @@ public class Notes {
      */
     public static final Uri CONTENT_DATA_URI = Uri.parse("content://" + AUTHORITY + "/data");
 
+    /**
+     * 定义DataColumns的常量,用于后面创建数据库的表头。主要是定义存储便签数据内容
+     */
     public interface NoteColumns {
         /**
          * The unique ID for a row
