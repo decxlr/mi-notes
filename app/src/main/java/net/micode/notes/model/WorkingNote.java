@@ -32,6 +32,9 @@ import net.micode.notes.data.Notes.TextNote;
 import net.micode.notes.tool.ResourceParser.NoteBgResources;
 
 
+/**
+ * 当前活动便签项的类
+ */
 public class WorkingNote {
     // Note for the working note
     private Note mNote;

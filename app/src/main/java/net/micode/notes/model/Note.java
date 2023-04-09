@@ -34,12 +34,19 @@ import net.micode.notes.data.Notes.TextNote;
 import java.util.ArrayList;
 
 
+//定义Note类，用来处理单个小米便签的操作
 public class Note {
     private ContentValues mNoteDiffValues;
     private NoteData mNoteData;
     private static final String TAG = "Note";
-    /**
-     * Create a new note id for adding a new note to databases
+
+    /*
+     *  作用：为新便签在数据库里边创建一个新的ID
+     *  实现：创建一个内容集合，存入创建便签的时间，最后修改的时间，再根据当前便签所处的上下文和文件夹的ID，从内容解析器中得到的路径uri里面
+     *       获取新的便签的ID。最后判断ID是否合法，然后返回
+     *  参数：@context：便签所处的上下文
+     *       @folderId：所处的便签文件夹ID
+     *       @return：新创建便签的ID
      */
     public static synchronized long getNewNoteId(Context context, long folderId) {
         // Create a new note in the database
@@ -100,6 +107,7 @@ public class Note {
         return mNoteDiffValues.size() > 0 || mNoteData.isLocalModified();
     }
 
+    // 判断是否便签已经同步，通过判断本地修改标识来判断，若他的值为0，则说明便签同步了
     public boolean syncNote(Context context, long noteId) {
         if (noteId <= 0) {
             throw new IllegalArgumentException("Wrong note id:" + noteId);
@@ -141,6 +149,9 @@ public class Note {
 
         private static final String TAG = "NoteData";
 
+        /**
+         * 定义一个基本的便签内容的数据类，主要包含文本数据和电话号码数据
+         */
         public NoteData() {
             mTextDataValues = new ContentValues();
             mCallDataValues = new ContentValues();
@@ -178,6 +189,11 @@ public class Note {
             mNoteDiffValues.put(NoteColumns.MODIFIED_DATE, System.currentTimeMillis());
         }
 
+        /**
+         * 将数据压入数据库
+         * 通过Uri的形式将数据压入数据库
+         * 输入参数是一个指向Context的对象以及一个长整形表明noteID
+         */
         Uri pushIntoContentResolver(Context context, long noteId) {
             /**
              * Check for safety
