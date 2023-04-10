@@ -32,19 +32,43 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+/**
+ * 创建Task类继承自Node
+ */
 public class Task extends Node {
+    /**
+     * 调用 getSimpleName ()方法来得到类的简写名称并存入字符串TAG中
+     */
     private static final String TAG = Task.class.getSimpleName();
 
+    /**
+     * 任务是否完成
+     */
     private boolean mCompleted;
 
+    /**
+     * 存储实例中的数据的类型
+     */
     private String mNotes;
 
+    /**
+     * 元数据信息
+     */
     private JSONObject mMetaInfo;
 
+    /**
+     * .对应的优先兄弟类Task的指针
+     */
     private Task mPriorSibling;
 
+    /**
+     * 记录父节点列表
+     */
     private TaskList mParent;
 
+    /**
+     * 构造方法，对象的初始化
+     */
     public Task() {
         super();
         mCompleted = false;
@@ -54,22 +78,31 @@ public class Task extends Node {
         mMetaInfo = null;
     }
 
+    /**
+     * 通过 actionId 实现创建的动作
+     * @param actionId int
+     * @return JSONObject
+     */
     @Override
     public JSONObject getCreateAction(int actionId) {
         JSONObject js = new JSONObject();
 
         try {
             // action_type
+            /*存入当前task的指针*/
             js.put(GTaskStringUtils.GTASK_JSON_ACTION_TYPE,
                     GTaskStringUtils.GTASK_JSON_ACTION_TYPE_CREATE);
 
             // action_id
+            /*设置活动的id*/
             js.put(GTaskStringUtils.GTASK_JSON_ACTION_ID, actionId);
 
             // index
+            /*设置索引*/
             js.put(GTaskStringUtils.GTASK_JSON_INDEX, mParent.getChildTaskIndex(this));
 
             // entity_delta
+            /*创建实体数据并将name，创建者id，实体类型存入数据*/
             JSONObject entity = new JSONObject();
             entity.put(GTaskStringUtils.GTASK_JSON_NAME, getName());
             entity.put(GTaskStringUtils.GTASK_JSON_CREATOR_ID, "null");
@@ -81,17 +114,22 @@ public class Task extends Node {
             js.put(GTaskStringUtils.GTASK_JSON_ENTITY_DELTA, entity);
 
             // parent_id
+            /*存入父id*/
             js.put(GTaskStringUtils.GTASK_JSON_PARENT_ID, mParent.getGid());
 
             // dest_parent_type
+            /*所在列表的id存入父id*/
             js.put(GTaskStringUtils.GTASK_JSON_DEST_PARENT_TYPE,
                     GTaskStringUtils.GTASK_JSON_TYPE_GROUP);
 
             // list_id
+            /*存入列表id*/
             js.put(GTaskStringUtils.GTASK_JSON_LIST_ID, mParent.getGid());
 
             // prior_sibling_id
+            /*如果存在有高优先级的任务*/
             if (mPriorSibling != null) {
+                /*将其存入优先ID序列中*/
                 js.put(GTaskStringUtils.GTASK_JSON_PRIOR_SIBLING_ID, mPriorSibling.getGid());
             }
 
@@ -104,6 +142,11 @@ public class Task extends Node {
         return js;
     }
 
+    /**
+     * 接收更新action
+     * @param actionId int
+     * @return JSONObject
+     */
     @Override
     public JSONObject getUpdateAction(int actionId) {
         JSONObject js = new JSONObject();
@@ -137,6 +180,10 @@ public class Task extends Node {
         return js;
     }
 
+    /**
+     * 通过远端的JSONObject获取任务内容
+     * @param js JSONObject
+     */
     @Override
     public void setContentByRemoteJSON(JSONObject js) {
         if (js != null) {
@@ -178,6 +225,10 @@ public class Task extends Node {
         }
     }
 
+    /**
+     * 通过本地的JSONObject获取内容
+     * @param js JSONObject
+     */
     @Override
     public void setContentByLocalJSON(JSONObject js) {
         if (js == null || !js.has(GTaskStringUtils.META_HEAD_NOTE)
@@ -189,11 +240,13 @@ public class Task extends Node {
             JSONObject note = js.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
             JSONArray dataArray = js.getJSONArray(GTaskStringUtils.META_HEAD_DATA);
 
+            /*note 类型匹配失败*/
             if (note.getInt(NoteColumns.TYPE) != Notes.TYPE_NOTE) {
                 Log.e(TAG, "invalid type");
                 return;
             }
 
+            /*遍历数据数组*/
             for (int i = 0; i < dataArray.length(); i++) {
                 JSONObject data = dataArray.getJSONObject(i);
                 if (TextUtils.equals(data.getString(DataColumns.MIME_TYPE), DataConstants.NOTE)) {
@@ -208,6 +261,10 @@ public class Task extends Node {
         }
     }
 
+    /**
+     * 从content获取本地json
+     * @return JSONObject
+     */
     @Override
     public JSONObject getLocalJSONFromContent() {
         String name = getName();
@@ -219,6 +276,7 @@ public class Task extends Node {
                     return null;
                 }
 
+                /*初始化四个指针*/
                 JSONObject js = new JSONObject();
                 JSONObject note = new JSONObject();
                 JSONArray dataArray = new JSONArray();
@@ -231,9 +289,11 @@ public class Task extends Node {
                 return js;
             } else {
                 // synced task
+                /*完成同步工作*/
                 JSONObject note = mMetaInfo.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
                 JSONArray dataArray = mMetaInfo.getJSONArray(GTaskStringUtils.META_HEAD_DATA);
 
+                /*遍历 dataArray 查找与数据库中DataConstants.NOTE 记录信息一致的 data*/
                 for (int i = 0; i < dataArray.length(); i++) {
                     JSONObject data = dataArray.getJSONObject(i);
                     if (TextUtils.equals(data.getString(DataColumns.MIME_TYPE), DataConstants.NOTE)) {
@@ -252,6 +312,10 @@ public class Task extends Node {
         }
     }
 
+    /**
+     * 设置元数据信息
+     * @param metaData MetaData
+     */
     public void setMetaInfo(MetaData metaData) {
         if (metaData != null && metaData.getNotes() != null) {
             try {
@@ -263,6 +327,11 @@ public class Task extends Node {
         }
     }
 
+    /**
+     * 获取同步的行为
+     * @param c Cursor
+     * @return int
+     */
     @Override
     public int getSyncAction(Cursor c) {
         try {
@@ -317,11 +386,20 @@ public class Task extends Node {
         return SYNC_ACTION_ERROR;
     }
 
+    /**
+     * 判断是否值得存放，即当前数据是否有效，若数据非空 或 名字合法存在且去除空格后的名字长度大于零则返回真值。
+     * 其中 trim() 的作用是去除字符串前后的空格。
+     * @return boolean
+     */
     public boolean isWorthSaving() {
         return mMetaInfo != null || (getName() != null && getName().trim().length() > 0)
                 || (getNotes() != null && getNotes().trim().length() > 0);
     }
 
+    /**
+     * 以下的方法基本都是完成数据反馈和状态判断的方法
+     * @param completed boolean
+     */
     public void setCompleted(boolean completed) {
         this.mCompleted = completed;
     }
