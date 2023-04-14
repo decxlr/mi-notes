@@ -36,6 +36,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 
+/**
+ * BackupUtils 是一个备份工具类，用于数据备份读取和显示
+ */
 public class BackupUtils {
     private static final String TAG = "BackupUtils";
     // Singleton stuff
@@ -164,6 +167,7 @@ public class BackupUtils {
 
         /**
          * Export note identified by id to a print stream
+         * 函数：将便签的内容以文本的形式显示在屏幕上。比如电话号码、打电话的日期等。
          */
         private void exportNoteToText(String noteId, PrintStream ps) {
             Cursor dataCursor = mContext.getContentResolver().query(Notes.CONTENT_DATA_URI,
@@ -217,6 +221,8 @@ public class BackupUtils {
 
         /**
          * Note will be exported as text which is user readable
+         *  函数功能：实现具体导出功能
+         *  函数实现：先调用externalStorageAvailable函数进行外部设备检查，然后调用getExportToTextPrintStream获取文件流，其次调用上述两个函数进行具体输出
          */
         public int exportToText() {
             if (!externalStorageAvailable()) {

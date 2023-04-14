@@ -35,6 +35,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 
+/**
+ * 数据是否在数据库中，通过名字查询文件夹是否存在，返回一个HashSet保存文件夹对应的所有窗口id和类型，根据noteID返回note呼叫的电话号码，
+ * 根据便签ID获取片段信息，格式化定义公共数据工具类，其具有以下功能：批量删除便签，将便签挪至文件夹下，便签批量移动至文件夹下，
+ * 获取用户文件夹数量，判断便签的名字是否在数据库中存在或被访问，判断便签的数据片段。
+ */
 public class DataUtils {
     public static final String TAG = "DataUtils";
     public static boolean batchDeleteNotes(ContentResolver resolver, HashSet<Long> ids) {
