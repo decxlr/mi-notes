@@ -28,8 +28,13 @@ import net.micode.notes.R;
 import net.micode.notes.data.Notes;
 import net.micode.notes.data.Notes.NoteColumns;
 
-
+/*
+ *ursorAdapter是Cursor和ListView的接口
+ * FoldersListAdapter继承了CursorAdapter的类
+ * 主要作用是便签数据库和用户的交互
+ */
 public class FoldersListAdapter extends CursorAdapter {
+    //调用数据库中便签的ID和片段
     public static final String [] PROJECTION = {
         NoteColumns.ID,
         NoteColumns.SNIPPET
@@ -45,10 +50,13 @@ public class FoldersListAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        //创建一个新文件夹，对各文件夹中子标签的初始化
         return new FolderListItem(context);
     }
 
+
     @Override
+    //将各个布局文件绑定起来
     public void bindView(View view, Context context, Cursor cursor) {
         if (view instanceof FolderListItem) {
             String folderName = (cursor.getLong(ID_COLUMN) == Notes.ID_ROOT_FOLDER) ? context
@@ -57,6 +65,7 @@ public class FoldersListAdapter extends CursorAdapter {
         }
     }
 
+    //根据数据库中标签的ID得到标签的各项内容
     public String getFolderName(Context context, int position) {
         Cursor cursor = (Cursor) getItem(position);
         return (cursor.getLong(ID_COLUMN) == Notes.ID_ROOT_FOLDER) ? context
@@ -67,8 +76,10 @@ public class FoldersListAdapter extends CursorAdapter {
         private TextView mName;
 
         public FolderListItem(Context context) {
+            //数据库操作
             super(context);
             inflate(context, R.layout.folder_list_item, this);
+            //根据布局文件的名字等信息将其找出来
             mName = (TextView) findViewById(R.id.tv_folder_name);
         }
 

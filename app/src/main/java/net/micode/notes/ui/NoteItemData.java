@@ -42,6 +42,7 @@ public class NoteItemData {
         NoteColumns.WIDGET_TYPE,
     };
 
+    //定义和标记常量
     private static final int ID_COLUMN                    = 0;
     private static final int ALERTED_DATE_COLUMN          = 1;
     private static final int BG_COLOR_ID_COLUMN           = 2;
@@ -55,6 +56,7 @@ public class NoteItemData {
     private static final int WIDGET_ID_COLUMN             = 10;
     private static final int WIDGET_TYPE_COLUMN           = 11;
 
+    //定义数据
     private long mId;
     private long mAlertDate;
     private int mBgColorId;
@@ -76,7 +78,9 @@ public class NoteItemData {
     private boolean mIsOneNoteFollowingFolder;
     private boolean mIsMultiNotesFollowingFolder;
 
+    //初始化NoteItemData，主要利用光标cursor获取的东西
     public NoteItemData(Context context, Cursor cursor) {
+        //getxxx为转换格式
         mId = cursor.getLong(ID_COLUMN);
         mAlertDate = cursor.getLong(ALERTED_DATE_COLUMN);
         mBgColorId = cursor.getInt(BG_COLOR_ID_COLUMN);
@@ -92,6 +96,7 @@ public class NoteItemData {
         mWidgetId = cursor.getInt(WIDGET_ID_COLUMN);
         mWidgetType = cursor.getInt(WIDGET_TYPE_COLUMN);
 
+        //初始化电话号信息
         mPhoneNumber = "";
         if (mParentId == Notes.ID_CALL_RECORD_FOLDER) {
             mPhoneNumber = DataUtils.getCallNumberByNoteId(context.getContentResolver(), mId);
@@ -109,30 +114,43 @@ public class NoteItemData {
         checkPostion(cursor);
     }
 
+    //根据鼠标的位置设置标记和位置
     private void checkPostion(Cursor cursor) {
         mIsLastItem = cursor.isLast() ? true : false;
         mIsFirstItem = cursor.isFirst() ? true : false;
         mIsOnlyOneItem = (cursor.getCount() == 1);
+        //初始化两个标记(多重子文件和单一子文件)
         mIsMultiNotesFollowingFolder = false;
         mIsOneNoteFollowingFolder = false;
 
+        //设置上述两个标记
         if (mType == Notes.TYPE_NOTE && !mIsFirstItem) {
             int position = cursor.getPosition();
+            //获取光标位置后看上一行
             if (cursor.moveToPrevious()) {
+                //若光标满足系统或note格式
                 if (cursor.getInt(TYPE_COLUMN) == Notes.TYPE_FOLDER
                         || cursor.getInt(TYPE_COLUMN) == Notes.TYPE_SYSTEM) {
+                    //若数据行数大于前位置+1,则多重子文件置为true
                     if (cursor.getCount() > (position + 1)) {
                         mIsMultiNotesFollowingFolder = true;
+                    //否则单一子文件置为true
                     } else {
                         mIsOneNoteFollowingFolder = true;
                     }
                 }
+                //若不能往下走则报错
                 if (!cursor.moveToNext()) {
                     throw new IllegalStateException("cursor move to previous but can't move back");
                 }
             }
         }
     }
+
+
+    /*
+     *以下是获取标记的函数
+     */
 
     public boolean isOneFollowingFolder() {
         return mIsOneNoteFollowingFolder;
@@ -214,6 +232,7 @@ public class NoteItemData {
         return (mAlertDate > 0);
     }
 
+    //若数据父id为保存至文件夹模式的id且满足电话号码单元不为空，则isCallRecord为true
     public boolean isCallRecord() {
         return (mParentId == Notes.ID_CALL_RECORD_FOLDER && !TextUtils.isEmpty(mPhoneNumber));
     }
