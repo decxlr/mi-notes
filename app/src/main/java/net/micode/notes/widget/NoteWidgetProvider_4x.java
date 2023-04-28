@@ -24,23 +24,23 @@ import net.micode.notes.data.Notes;
 import net.micode.notes.tool.ResourceParser;
 
 
-public class NoteWidgetProvider_4x extends NoteWidgetProvider {
+public class NoteWidgetProvider_4x extends NoteWidgetProvider {         /*定义4*4的widget*/
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {      /*对窗口更新进行重载*/
         super.update(context, appWidgetManager, appWidgetIds);
     }
 
-    protected int getLayoutId() {
+    protected int getLayoutId() {               /*返回窗口位置信息*/
         return R.layout.widget_4x;
     }
 
     @Override
-    protected int getBgResourceId(int bgId) {
+    protected int getBgResourceId(int bgId) {   /*获取背景id*/
         return ResourceParser.WidgetBgResources.getWidget4xBgResource(bgId);
     }
 
     @Override
-    protected int getWidgetType() {
+    protected int getWidgetType() {             /*返回窗口类型*/
         return Notes.TYPE_WIDGET_4X;
     }
 }

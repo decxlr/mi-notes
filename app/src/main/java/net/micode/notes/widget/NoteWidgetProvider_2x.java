@@ -23,25 +23,27 @@ import net.micode.notes.R;
 import net.micode.notes.data.Notes;
 import net.micode.notes.tool.ResourceParser;
 
-
+/**
+ * 定义2*2大小的widget
+ */
 public class NoteWidgetProvider_2x extends NoteWidgetProvider {
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {      /*更新窗口*/
         super.update(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
-    protected int getLayoutId() {
+    protected int getLayoutId() {                           /*获取外部资源id*/
         return R.layout.widget_2x;
     }
 
     @Override
-    protected int getBgResourceId(int bgId) {
+    protected int getBgResourceId(int bgId) {               /*获取背景id*/
         return ResourceParser.WidgetBgResources.getWidget2xBgResource(bgId);
     }
 
     @Override
-    protected int getWidgetType() {
+    protected int getWidgetType() {                         /*确定窗口大小*/
         return Notes.TYPE_WIDGET_2X;
     }
 }

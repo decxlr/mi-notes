@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/* 该类实现正常桌面的挂件*/
 package net.micode.notes.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -33,23 +33,33 @@ import net.micode.notes.ui.NoteEditActivity;
 import net.micode.notes.ui.NotesListActivity;
 
 public abstract class NoteWidgetProvider extends AppWidgetProvider {
-    public static final String [] PROJECTION = new String [] {
+    /*
+    extends用法继承或者覆盖
+    继承——派生类继承了父类的所有方法。
+    覆盖——在子类中定义一个与父类同名，返回类型，参数类型均相同的一个方法
+    abstract class 定义抽象类，如果设计这个类的某个描述方法不清楚，则应该定义为抽象类，可以在以后继承这个抽象类的时候进行完善
+    */
+    public static final String [] PROJECTION = new String [] {  /*定义了一个字符数组类型的静态变量*/
         NoteColumns.ID,
         NoteColumns.BG_COLOR_ID,
         NoteColumns.SNIPPET
     };
 
-    public static final int COLUMN_ID           = 0;
+    public static final int COLUMN_ID           = 0;           /*便签栏编号*/
     public static final int COLUMN_BG_COLOR_ID  = 1;
     public static final int COLUMN_SNIPPET      = 2;
 
-    private static final String TAG = "NoteWidgetProvider";
+    private static final String TAG = "NoteWidgetProvider";     /*定义NoteWidgetProvider为标签TAG*/
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        ContentValues values = new ContentValues();
-        values.put(NoteColumns.WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        for (int i = 0; i < appWidgetIds.length; i++) {
+        /*
+        方法：重载删除的过程，在删除的同时，把当前对应的窗口给关闭，也即把WIDGET_ID映射
+        为INVALID_APPWIGET_ID，就是把当前窗口id标记为无效窗口。然后把这个修改应用到所有关联的uri便签
+        */
+        ContentValues values = new ContentValues();                /*对每个AppWidget，可以创建其多个实例，这些实例对应于不同的appWidgetId*/
+        values.put(NoteColumns.WIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);   /*对每个AppWidget，可以创建其多个实例，这些实例对应于不同的appWidgetId*/
+        for (int i = 0; i < appWidgetIds.length; i++) {             /*遍历修改所有的URI值*/
             context.getContentResolver().update(Notes.CONTENT_NOTE_URI,
                     values,
                     NoteColumns.WIDGET_ID + "=?",
@@ -57,7 +67,7 @@ public abstract class NoteWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private Cursor getNoteWidgetInfo(Context context, int widgetId) {
+    private Cursor getNoteWidgetInfo(Context context, int widgetId) {       /*获取窗口宽度信息*/
         return context.getContentResolver().query(Notes.CONTENT_NOTE_URI,
                 PROJECTION,
                 NoteColumns.WIDGET_ID + "=? AND " + NoteColumns.PARENT_ID + "<>?",
@@ -65,13 +75,13 @@ public abstract class NoteWidgetProvider extends AppWidgetProvider {
                 null);
     }
 
-    protected void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    protected void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {     /*上传widget的信息*/
         update(context, appWidgetManager, appWidgetIds, false);
     }
 
-    private void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds,
+    private void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds,         /*更新widget的信息方法*/
             boolean privacyMode) {
-        for (int i = 0; i < appWidgetIds.length; i++) {
+        for (int i = 0; i < appWidgetIds.length; i++) {                                                 /*appWidgetId是每添加一个Widget会有一个WidgetId*/
             if (appWidgetIds[i] != AppWidgetManager.INVALID_APPWIDGET_ID) {
                 int bgId = ResourceParser.getDefaultBgId(context);
                 String snippet = "";
@@ -117,6 +127,7 @@ public abstract class NoteWidgetProvider extends AppWidgetProvider {
                     pendingIntent = PendingIntent.getActivity(context, appWidgetIds[i], intent,
                             PendingIntent.FLAG_UPDATE_CURRENT);
                 }
+	
 
                 rv.setOnClickPendingIntent(R.id.widget_text, pendingIntent);
                 appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
@@ -124,9 +135,9 @@ public abstract class NoteWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    protected abstract int getBgResourceId(int bgId);
+    protected abstract int getBgResourceId(int bgId);       /*从背景资源中获取当前应用ID*/
 
-    protected abstract int getLayoutId();
+    protected abstract int getLayoutId();                   /*获取部局ID*/
 
-    protected abstract int getWidgetType();
+    protected abstract int getWidgetType();                 /*可以调用2*2或者4*4的函数*/
 }
