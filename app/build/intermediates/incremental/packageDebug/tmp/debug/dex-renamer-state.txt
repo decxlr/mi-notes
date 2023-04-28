@@ -1,4 +1,4 @@
-#Thu Mar 02 20:35:05 GMT+08:00 2023
-base.0=E\:\\Android\\Notes-master1\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+#Fri Apr 28 23:18:01 GMT+08:00 2023
+base.0=E\:\\Android2\\mi-notes\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

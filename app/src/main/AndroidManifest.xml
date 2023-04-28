@@ -1,20 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- Copyright (c) 2010-2011, The MiCode Open Source Community (www.micode.net)
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-
-          http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="net.micode.notes"
@@ -36,6 +20,26 @@
     <application
         android:icon="@drawable/icon_app"
         android:label="@string/app_name" >
+
+        <activity
+            android:name=".ui.ChangePasswordActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan" >
+
+        </activity>
+
+        <activity
+            android:name=".ui.PasswordActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.NotesListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -45,35 +49,39 @@
             android:uiOptions="splitActionBarWhenNarrow"
             android:windowSoftInputMode="adjustPan" >
 
-            <intent-filter>
+            <!--
+                <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
-
         <activity
             android:name=".ui.NoteEditActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:theme="@style/NoteTheme" >
-
-            <intent-filter android:scheme="http"
-                tools:ignore="AppLinkUrlError">
+            <intent-filter
+                android:scheme="http"
+                tools:ignore="AppLinkUrlError" >
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="vnd.android.cursor.item/text_note" />
                 <data android:mimeType="vnd.android.cursor.item/call_note" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.INSERT_OR_EDIT" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="vnd.android.cursor.item/text_note" />
                 <data android:mimeType="vnd.android.cursor.item/call_note" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -83,7 +91,7 @@
         </activity>
 
         <provider
-            android:name="net.micode.notes.data.NotesProvider"
+            android:name=".data.NotesProvider"
             android:authorities="micode_notes"
             android:multiprocess="true" />
 
@@ -103,7 +111,6 @@
         <receiver
             android:name=".widget.NoteWidgetProvider_4x"
             android:label="@string/app_widget4x4" >
-
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
@@ -114,15 +121,13 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_4x_info" />
         </receiver>
-
         <receiver android:name=".ui.AlarmInitReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver
-            android:name="net.micode.notes.ui.AlarmReceiver"
+            android:name=".ui.AlarmReceiver"
             android:process=":remote" >
         </receiver>
 
@@ -132,16 +137,15 @@
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Holo.Wallpaper.NoTitleBar" >
         </activity>
-
         <activity
-            android:name="net.micode.notes.ui.NotesPreferenceActivity"
+            android:name=".ui.NotesPreferenceActivity"
             android:label="@string/preferences_title"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
 
         <service
-            android:name="net.micode.notes.gtask.remote.GTaskSyncService"
+            android:name=".gtask.remote.GTaskSyncService"
             android:exported="false" >
         </service>
 
@@ -149,4 +153,5 @@
             android:name="android.app.default_searchable"
             android:value=".ui.NoteEditActivity" />
     </application>
+
 </manifest>

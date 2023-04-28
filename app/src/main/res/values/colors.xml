@@ -17,4 +17,47 @@
 
 <resources>
     <color name="user_query_highlight">#335b5b5b</color>
+
+    <color name="main_background">#EEEEEE</color>
+    <color name="colorAccent">#FFC400</color>
+    <color name="colorPrimary">#4285F4</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="textInputLayout">#48d1cc</color>
+    <color name="yellow">#f4ed2a</color>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#1296db</color>
+    <color name="gray">#8a8a8a</color>
+    <color name="ivory">#FFFFF0</color><!-- 象牙色 -->
+    <color name="spearmint">#48d1cc</color><!-- 松石绿 -->
+    <color name="whitesmoke">#F5F5F5</color><!--烟白色 -->
+    <color name="gainsboro">#DCDCDC</color><!--淡灰色 -->
+    <color name="darkgrey">#A9A9A9</color><!--暗灰色 -->
+    <color name="red">#FF0000</color><!--红色 -->
+    <color name="transparency">#00000000</color><!--透明色 -->
+    <color name="halftransparency">#6B000000</color><!--半透明色-->
+    <color name="gray_very_light">#E0E0E0</color>
+    <color name="qianlan">#F5FFFA</color>
+    <color name="qianblue">#F5FAFF</color>
+    <color name="qianhuang">#FEFFF5</color>
+    <color name="dimgray">#696969</color><!--暗灰色 -->
+    <color name="lightgray">#D3D3D3</color><!--亮灰色 -->
+    <color name="forestgreen">#228B22</color><!--森林绿 -->
+    <color name="deepblue">#4474fd</color><!--深蓝色-->
+    <color name="pinkred">#fe4f80</color><!--粉红色-->
+    <color name="soilyellow">#fec55a</color><!--土黄色-->
+    <color name="shallowgreen">#12d9b2</color><!--浅绿色-->
+    <color name="shallowblue">#1cb6fe</color><!--浅蓝色-->
+    <color name="shallowgrey">#f6f6f6</color><!--浅灰色-->
+    <color name="veryshallowblue">#f4f8fb</color><!--很浅的蓝色-->
+    <color name="littleshallowblue">#dfecfe</color><!--一点点浅的蓝色-->
+    <color name="littleshallowgrey">#f7f7f7</color><!--一点点浅的灰色-->
+    <color name="mintcream">#F5FFFA</color><!--薄荷色 -->
+    <color name="news_background">#FAFAFA</color>
 </resources>
