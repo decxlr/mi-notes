@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 #Fri Apr 14 16:31:43 CST 2023
 base.0=D\:\\Git\\Note\\mi-notes\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+=======
+#Fri Apr 28 23:18:01 GMT+08:00 2023
+base.0=E\:\\Android2\\mi-notes\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+>>>>>>> dev5
 renamed.0=classes.dex
 path.0=classes.dex
