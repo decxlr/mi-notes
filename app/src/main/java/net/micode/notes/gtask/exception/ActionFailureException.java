@@ -16,17 +16,29 @@
 
 package net.micode.notes.gtask.exception;
 
+/**
+ * 从RuntimeException类派生出ActionFailureException类，用来处理行为异常
+ */
 public class ActionFailureException extends RuntimeException {
     private static final long serialVersionUID = 4425249765923293627L;
 
+    /**
+     * 交给父类的构造方法
+     */
     public ActionFailureException() {
         super();
     }
 
+    /**
+     * 构造方法
+     */
     public ActionFailureException(String paramString) {
         super(paramString);
     }
 
+    /**
+     * 构造方法
+     */
     public ActionFailureException(String paramString, Throwable paramThrowable) {
         super(paramString, paramThrowable);
     }

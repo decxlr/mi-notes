@@ -29,22 +29,48 @@ import net.micode.notes.ui.NotesListActivity;
 import net.micode.notes.ui.NotesPreferenceActivity;
 
 
+/**
+ * 用于Gtask的：任务同步，任务取消，显示同步任务的进程、通知和结果
+ */
 public class GTaskASyncTask extends AsyncTask<Void, String, Integer> {
 
+    /**
+     * GTask同步通知的ID
+     */
     private static int GTASK_SYNC_NOTIFICATION_ID = 5234235;
 
+    /**
+     * 通过interface实现接口OnCompleteListener，用来初始化异步的功能
+     */
     public interface OnCompleteListener {
         void onComplete();
     }
 
+    /**
+     * 上下文
+     */
     private Context mContext;
 
+    /**
+     * 实例化一个通知管理器类。
+     */
     private NotificationManager mNotifiManager;
 
+    /**
+     * 实例化任务管理器
+     */
     private GTaskManager mTaskManager;
 
+    /**
+     * 实例化是否完成的监听器
+     */
     private OnCompleteListener mOnCompleteListener;
 
+    /**
+     * 带参构造方法
+     * @param context Context
+     * @param listener OnCompleteListener
+     */
     public GTaskASyncTask(Context context, OnCompleteListener listener) {
         mContext = context;
         mOnCompleteListener = listener;
@@ -53,35 +79,29 @@ public class GTaskASyncTask extends AsyncTask<Void, String, Integer> {
         mTaskManager = GTaskManager.getInstance();
     }
 
+    /**
+     * 取消同步
+     */
     public void cancelSync() {
         mTaskManager.cancelSync();
     }
 
+    /**
+     * 发布进度单位，系统将会调用onProgressUpdate()方法更新其中的值
+     * @param message String
+     */
     public void publishProgess(String message) {
         publishProgress(new String[] {
             message
         });
     }
 
-    /*private void showNotification(int tickerId, String content) {
-        Notification notification = new Notification(R.drawable.notification, mContext
-                .getString(tickerId), System.currentTimeMillis());
-        notification.defaults = Notification.DEFAULT_LIGHTS;
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
-        PendingIntent pendingIntent;
-        if (tickerId != R.string.ticker_success) {
-            pendingIntent = PendingIntent.getActivity(mContext, 0, new Intent(mContext,
-                    NotesPreferenceActivity.class), 0);
 
-        } else {
-            pendingIntent = PendingIntent.getActivity(mContext, 0, new Intent(mContext,
-                    NotesListActivity.class), 0);
-        }
-        notification.setLatestEventInfo(mContext, mContext.getString(R.string.app_name), content,
-                pendingIntent);
-        mNotifiManager.notify(GTASK_SYNC_NOTIFICATION_ID, notification);
-    }*/
-
+    /**
+     * 显示通知
+     * @param tickerId int
+     * @param content String
+     */
     private void showNotification(int tickerId, String content) {
         PendingIntent pendingIntent;
         if (tickerId != R.string.ticker_success) {
@@ -106,6 +126,11 @@ public class GTaskASyncTask extends AsyncTask<Void, String, Integer> {
     }
 
 
+    /**
+     * 执行后台操作
+     * @param unused Void...
+     * @return Integer
+     */
     @Override
     protected Integer doInBackground(Void... unused) {
         publishProgess(mContext.getString(R.string.sync_progress_login, NotesPreferenceActivity
@@ -113,6 +138,10 @@ public class GTaskASyncTask extends AsyncTask<Void, String, Integer> {
         return mTaskManager.sync(mContext, this);
     }
 
+    /**
+     * 显示进度的更新
+     * @param progress void
+     */
     @Override
     protected void onProgressUpdate(String... progress) {
         showNotification(R.string.ticker_syncing, progress[0]);
@@ -121,6 +150,10 @@ public class GTaskASyncTask extends AsyncTask<Void, String, Integer> {
         }
     }
 
+    /**
+     * 执行完后台任务后更新UI，显示结果即进度条
+     * @param result Integer
+     */
     @Override
     protected void onPostExecute(Integer result) {
         if (result == GTaskManager.STATE_SUCCESS) {

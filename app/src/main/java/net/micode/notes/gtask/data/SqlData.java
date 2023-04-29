@@ -34,17 +34,32 @@ import net.micode.notes.gtask.exception.ActionFailureException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+/**
+ * 用于支持小米便签最底层的数据库相关操作
+ */
 public class SqlData {
+    /**
+     * 调用getSimpleName ()函数来得到类的简写名称存入字符串TAG中
+     */
     private static final String TAG = SqlData.class.getSimpleName();
 
+    /**
+     * 定义常量并赋初值-99999
+     */
     private static final int INVALID_ID = -99999;
 
+    /**
+     * 新建一个字符串数组，集合了interface DataColumns中所有SF常量
+     */
     public static final String[] PROJECTION_DATA = new String[] {
             DataColumns.ID, DataColumns.MIME_TYPE, DataColumns.CONTENT, DataColumns.DATA1,
             DataColumns.DATA3
     };
 
+    /**
+     * 在数据库中，表头的每一列都有一个名字,
+     * 分别设置0到4列的名称
+     */
     public static final int DATA_ID_COLUMN = 0;
 
     public static final int DATA_MIME_TYPE_COLUMN = 1;
@@ -55,6 +70,9 @@ public class SqlData {
 
     public static final int DATA_CONTENT_DATA_3_COLUMN = 4;
 
+    /**
+     * 定义的一些私有全局变量，可以与sqlNote中的变量相对应分析,以下八个
+     */
     private ContentResolver mContentResolver;
 
     private boolean mIsCreate;
@@ -71,6 +89,10 @@ public class SqlData {
 
     private ContentValues mDiffDataValues;
 
+    /**
+     * 构造方法，初始化数据
+     * @param context Context
+     */
     public SqlData(Context context) {
         mContentResolver = context.getContentResolver();
         mIsCreate = true;
@@ -82,6 +104,11 @@ public class SqlData {
         mDiffDataValues = new ContentValues();
     }
 
+    /**
+     * 构造方法，初始化数据
+     * @param context Context
+     * @param c Cursor
+     */
     public SqlData(Context context, Cursor c) {
         mContentResolver = context.getContentResolver();
         mIsCreate = false;
@@ -89,6 +116,10 @@ public class SqlData {
         mDiffDataValues = new ContentValues();
     }
 
+    /**
+     * 从光标c处加载数据，帮助实现SqlData的第二种构造，将5列的数据赋给该类的对象
+     * @param c Cursor
+     */
     private void loadFromCursor(Cursor c) {
         mDataId = c.getLong(DATA_ID_COLUMN);
         mDataMimeType = c.getString(DATA_MIME_TYPE_COLUMN);
@@ -97,13 +128,20 @@ public class SqlData {
         mDataContentData3 = c.getString(DATA_CONTENT_DATA_3_COLUMN);
     }
 
+    /**
+     * 设置用于共享的数据，并提供异常抛出与处理机制
+     * @param js JSONObject
+     * @throws JSONException JSON类型的异常
+     */
     public void setContent(JSONObject js) throws JSONException {
+        /*设置数据 id，如果传入的 JSONObject 对象中存在DataColumns.ID则获取并设置，否则设为INVALID_ID*/
         long dataId = js.has(DataColumns.ID) ? js.getLong(DataColumns.ID) : INVALID_ID;
         if (mIsCreate || mDataId != dataId) {
             mDiffDataValues.put(DataColumns.ID, dataId);
         }
         mDataId = dataId;
 
+        /*如果传入的JSONObject对象有DataColumns.MIME_TYPE一项，则设置dataMimeType为这个，否则设为SqlData.java*/
         String dataMimeType = js.has(DataColumns.MIME_TYPE) ? js.getString(DataColumns.MIME_TYPE)
                 : DataConstants.NOTE;
         if (mIsCreate || !mDataMimeType.equals(dataMimeType)) {
@@ -111,18 +149,22 @@ public class SqlData {
         }
         mDataMimeType = dataMimeType;
 
+        /*如果传入的JSONObject对象有DataColumn.CONTENT一项，那么将其获取，否则。将其设置为""*/
         String dataContent = js.has(DataColumns.CONTENT) ? js.getString(DataColumns.CONTENT) : "";
         if (mIsCreate || !mDataContent.equals(dataContent)) {
             mDiffDataValues.put(DataColumns.CONTENT, dataContent);
         }
         mDataContent = dataContent;
 
+
+        /*如果传入的JSONObject对象有DataColumn.DATA1一项，那么将其获取，否则。将其设置为0*/
         long dataContentData1 = js.has(DataColumns.DATA1) ? js.getLong(DataColumns.DATA1) : 0;
         if (mIsCreate || mDataContentData1 != dataContentData1) {
             mDiffDataValues.put(DataColumns.DATA1, dataContentData1);
         }
         mDataContentData1 = dataContentData1;
 
+        /*如果传入的JSONObject对象有DataColumn.DATA3一项，那么将其获取，否则。将其设置为""*/
         String dataContentData3 = js.has(DataColumns.DATA3) ? js.getString(DataColumns.DATA3) : "";
         if (mIsCreate || !mDataContentData3.equals(dataContentData3)) {
             mDiffDataValues.put(DataColumns.DATA3, dataContentData3);
@@ -130,6 +172,11 @@ public class SqlData {
         mDataContentData3 = dataContentData3;
     }
 
+    /**
+     * 获取共享的数据内容，并提供异常抛出与处理机制
+     * @return JSONObject
+     * @throws JSONException 异常
+     */
     public JSONObject getContent() throws JSONException {
         if (mIsCreate) {
             Log.e(TAG, "it seems that we haven't created this in database yet");
@@ -144,8 +191,15 @@ public class SqlData {
         return js;
     }
 
+    /**
+     * commit方法用于把当前所做的修改保存到数据库
+     * @param noteId long
+     * @param validateVersion boolean
+     * @param version long
+     */
     public void commit(long noteId, boolean validateVersion, long version) {
 
+        /*分两种构造方式进行不同的操作，之后进行异常处理并反馈错误信息*/
         if (mIsCreate) {
             if (mDataId == INVALID_ID && mDiffDataValues.containsKey(DataColumns.ID)) {
                 mDiffDataValues.remove(DataColumns.ID);
@@ -173,16 +227,22 @@ public class SqlData {
                                     String.valueOf(noteId), String.valueOf(version)
                             });
                 }
+                /*如果更新不存在（或许用户在同步时已经完成更新），则报错*/
                 if (result == 0) {
                     Log.w(TAG, "there is no update. maybe user updates note when syncing");
                 }
             }
         }
 
+        /*清空，表示已经更新*/
         mDiffDataValues.clear();
         mIsCreate = false;
     }
 
+    /**
+     * 获取当前id
+     * @return long
+     */
     public long getId() {
         return mDataId;
     }
